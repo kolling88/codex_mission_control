@@ -1,0 +1,116 @@
+{
+  "name": "codex-mission-control",
+  "displayName": "Codex Mission Control",
+  "description": "Local VS Code dashboard for Codex parent chats and subagents.",
+  "version": "0.1.0",
+  "publisher": "kolling88",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.92.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:codexMissionControl.dashboard",
+    "onCommand:codexMissionControl.openDashboard",
+    "onCommand:codexMissionControl.refresh",
+    "onCommand:codexMissionControl.showDiagnostics",
+    "onCommand:codexMissionControl.openCodexHome"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codexMissionControl",
+          "title": "Codex",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "codexMissionControl": [
+        {
+          "id": "codexMissionControl.dashboard",
+          "name": "Mission Control",
+          "type": "webview"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "codexMissionControl.openDashboard",
+        "title": "Codex Mission Control: Open Dashboard"
+      },
+      {
+        "command": "codexMissionControl.refresh",
+        "title": "Codex Mission Control: Refresh"
+      },
+      {
+        "command": "codexMissionControl.showDiagnostics",
+        "title": "Codex Mission Control: Show Diagnostics"
+      },
+      {
+        "command": "codexMissionControl.openCodexHome",
+        "title": "Codex Mission Control: Open Codex Home"
+      }
+    ],
+    "configuration": {
+      "title": "Codex Mission Control",
+      "properties": {
+        "codexMissionControl.codexHome": {
+          "type": "string",
+          "default": "",
+          "description": "Optional Codex home directory. Leave empty to use CODEX_HOME or the default ~/.codex path."
+        },
+        "codexMissionControl.refreshIntervalMs": {
+          "type": "number",
+          "default": 3000,
+          "minimum": 0,
+          "description": "Automatic dashboard refresh interval in milliseconds. Set to 0 to disable."
+        },
+        "codexMissionControl.maxSessions": {
+          "type": "number",
+          "default": 300,
+          "minimum": 10,
+          "maximum": 5000,
+          "description": "Maximum number of recent JSONL session files to parse."
+        },
+        "codexMissionControl.activeThresholdMinutes": {
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "maximum": 240,
+          "description": "A session modified within this window is treated as active unless it has completed."
+        },
+        "codexMissionControl.showPreview": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show short local previews extracted from Codex JSONL session messages. Disable to avoid rendering message text in cards."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "npm run compile:extension && npm run compile:webview",
+    "compile:extension": "tsc -p ./tsconfig.json",
+    "compile:webview": "vite build",
+    "typecheck": "tsc -p ./tsconfig.json --noEmit && tsc -p ./webview/tsconfig.json --noEmit",
+    "package": "npm run compile && vsce package --no-dependencies"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.14.12",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@types/vscode": "^1.92.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "@vscode/vsce": "^3.2.1",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
