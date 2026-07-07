@@ -9,8 +9,6 @@ node_modules/**
 vite.config.ts
 tsconfig.json
 webview/tsconfig.json
-README.md
-CHANGELOG.md
 !out/**
 !media/**
 !resources/**
