@@ -1,0 +1,7 @@
+node_modules/
+out/
+media/
+*.vsix
+.DS_Store
+.vscode-test/
+.env
