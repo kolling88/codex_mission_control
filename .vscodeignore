@@ -1,0 +1,16 @@
+.vscode/**
+.github/**
+src/**
+webview/**
+node_modules/**
+*.map
+*.tsbuildinfo
+.gitignore
+vite.config.ts
+tsconfig.json
+webview/tsconfig.json
+README.md
+CHANGELOG.md
+!out/**
+!media/**
+!resources/**
