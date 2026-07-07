@@ -261,32 +261,40 @@ function MissionCardView({ mission }: { mission: MissionCard }) {
         <StatusPill status={mission.status} />
       </header>
 
-      <div className="meta-row">
-        {mission.workspaceName && <Chip label={mission.workspaceName} />}
-        {mission.gitBranch && <Chip label={mission.gitBranch} />}
-        {mission.model && <Chip label={mission.model} />}
-        <Chip label={`${mission.childCount} subagente${mission.childCount === 1 ? '' : 's'}`} />
-      </div>
+      {mission.activeCount > 0 && (
+        <div className="meta-row">
+          <Chip label={`${mission.activeCount} subagente${mission.activeCount === 1 ? '' : 's'} ativo${mission.activeCount === 1 ? '' : 's'}`} />
+        </div>
+      )}
 
       {parent?.preview && <p className="preview">{parent.preview}</p>}
 
       <div className="mission-actions">
-        {mission.cwd && <button onClick={() => vscode.postMessage({ type: 'revealPath', path: mission.cwd })}>Projeto</button>}
-        {parent?.filePath && <button onClick={() => vscode.postMessage({ type: 'openFile', filePath: parent.filePath })}>JSONL</button>}
-        <button onClick={() => copyText(mission.id)}>Thread ID</button>
+        {mission.cwd && (
+          <button onClick={() => vscode.postMessage({ type: 'revealPath', path: mission.cwd })}>
+            Projeto
+          </button>
+        )}
+        {parent?.filePath && (
+          <button onClick={() => vscode.postMessage({ type: 'openFile', filePath: parent.filePath })}>
+            JSONL
+          </button>
+        )}
       </div>
 
       <section className="subagents">
-        {mission.children.length === 0 && <div className="no-subagents">Sem subagentes detectados.</div>}
-        {mission.children.map((child) => (
-          <SubagentCard key={child.id} session={child} />
-        ))}
+        {mission.children.filter((child) => child.status === 'active').length === 0 && (
+          <div className="no-subagents">Sem subagentes ativos.</div>
+        )}
+        {mission.children
+          .filter((child) => child.status === 'active')
+          .map((child) => (
+            <SubagentCard key={child.id} session={child} />
+          ))}
       </section>
 
       <footer className="mission-footer">
         <span>{formatRelative(mission.updatedAtMs)}</span>
-        {mission.errorCount > 0 && <span>{mission.errorCount} erro(s)</span>}
-        {mission.activeCount > 0 && <span>{mission.activeCount} ativo(s)</span>}
       </footer>
     </article>
   );
@@ -303,14 +311,8 @@ function SubagentCard({ session }: { session: CodexSession }) {
         </div>
       </div>
       {session.preview && <p className="preview small">{session.preview}</p>}
-      <div className="subagent-meta">
-        {session.lastToolName && <span>{session.lastToolName}</span>}
-        {session.toolCallCount > 0 && <span>{session.toolCallCount} tools</span>}
-        <span>{formatRelative(session.updatedAtMs)}</span>
-      </div>
       <div className="subagent-actions">
         <button onClick={() => vscode.postMessage({ type: 'openFile', filePath: session.filePath })}>JSONL</button>
-        <button onClick={() => copyText(session.id)}>ID</button>
       </div>
     </article>
   );
